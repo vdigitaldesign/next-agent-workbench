@@ -13,7 +13,7 @@ node --version
 npm --version
 ```
 
-Use npm for this lockfile. When your project adopts a runtime or package-manager pin, record it here and keep local and CI environments consistent.
+Use npm for this lockfile. [CI](quality-gates.md#github-actions) currently uses Node.js 24.16.0 and npm 12.2.1 on Ubuntu 24.04. Use those versions to reproduce its checks locally. This CI choice does not pin your shell or IDE. When your project adopts a runtime or package-manager pin, record it here and keep local and CI environments consistent.
 
 Git is required by the [documentation checker](quality-gates.md#documentation-checker). Run it from the Git repository root. If you started from a ZIP download or another copy without Git metadata, run `git init` in the project directory first; no commit is needed.
 

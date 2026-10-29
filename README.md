@@ -36,7 +36,7 @@ For example, a request to correct setup instructions stays in documentation. The
 
 A change to keyboard navigation needs different evidence. The agent must check the affected interaction and identify whether human QA is required. A successful production build covers compilation; the [verification guide](docs/setup/quality-gates.md) explains how to choose the remaining proof.
 
-The starter includes ESLint, a production build command, and a documentation checker with its own regression tests. An application test suite and CI are not configured. The [command reference](docs/setup/quality-gates.md#available-commands) describes the available checks and their limits.
+The starter includes ESLint, a production build command, and a documentation checker with its own regression tests. [GitHub Actions](docs/setup/quality-gates.md#github-actions) runs the checks relevant to each change; documentation-only edits do not rebuild the app. An application test suite is not configured. The [command reference](docs/setup/quality-gates.md#available-commands) describes the available checks and their limits.
 
 ## Project structure
 
@@ -61,6 +61,7 @@ next-agent-workbench/
 │   │   ├── documentation-governance.md # Document types and maintenance
 │   │   └── quality-gates.md        # Commands, verification, and cleanup
 │   └── releasing.md                # Versioning and publication
+├── .github/workflows/ci.yml       # Checks selected by changed files
 ├── .github/pull_request_template.md
 ├── next.config.ts
 ├── package.json

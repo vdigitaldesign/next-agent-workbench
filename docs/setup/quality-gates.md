@@ -23,7 +23,28 @@ The package uses npm and the checked-in `package-lock.json`; [local development]
 | `npm run build`      | Production compilation     | Checks that a production build completes in the tested environment.                                                             |
 | `npm run start`      | Start a built application  | Requires an existing production build; verify the relevant behavior separately.                                                 |
 
-A dedicated typecheck script, formatter script, application unit/E2E suite, and CI workflow are not configured. Do not report them as passed or claim that this guide installs them. If using an available direct tool invocation, record its exact command and origin; an agent's machine-local tool is not a repository dependency.
+A dedicated typecheck script, formatter script, and application unit/E2E suite are not configured. Do not report them as passed or claim that this guide installs them. If using an available direct tool invocation, record its exact command and origin; an agent's machine-local tool is not a repository dependency.
+
+## GitHub Actions
+
+The [CI workflow](../../.github/workflows/ci.yml) runs on pull requests, pushes to `main`, and manual dispatch. Its single `Check` job installs the locked dependencies and always runs `npm run docs:check`, including when a deleted code or asset file could break a documentation link.
+
+The changed paths determine the remaining steps:
+
+| Changed files                                                                                   | Additional checks                         |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Known root documentation, Markdown under `docs/`, the PR template, or `LICENSE` only            | None                                      |
+| `scripts/check-docs.mjs` or its regression tests, with optional documentation changes           | Checker regression tests and lint         |
+| Any other path, including application code, dependencies, configuration, or the workflow itself | Checker regression tests, lint, and build |
+| Manual run or unavailable comparison                                                            | All checks                                |
+
+The root documentation allowlist is in the workflow. Unknown paths take the full route. Git compares the PR base with the proposed merge result, or the previous push revision with the new result. Renames include both old and new paths, so moving code into a documentation directory cannot skip the build.
+
+CI uses Ubuntu 24.04, Node.js 24.16.0, and npm 12.2.1. It caches npm downloads, uses read-only repository permissions, and does not retain Git credentials for subsequent steps. It uses ordinary `pull_request` events and needs no project secrets. npm's default script policy still applies; the workflow does not approve dependency scripts.
+
+A failed command fails the job. Required status checks are a separate repository setting: select `Check` in a branch ruleset if your project needs GitHub to enforce a passing result before merge. Creating a project from this template copies the workflow file, not the upstream repository's settings. CI does not deploy or publish a package.
+
+When changing the workflow, verify both the selected commands and the path decisions. Include documentation-only, checker-only, mixed changes, deletions and renames, unknown paths, and a missing base. Inspect an actual GitHub run before claiming the workflow works there. [GitHub's Node.js guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/nodejs) covers the underlying setup.
 
 ## Documentation checker
 

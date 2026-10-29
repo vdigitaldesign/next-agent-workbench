@@ -6,6 +6,7 @@ Release contents and adoption notes for Next Agent Workbench. Versioning follows
 
 ### Added
 
+- GitHub Actions checks for pull requests and pushes to main, with documentation, checker, and application checks selected from the changed files.
 - README instructions for creating a project from the GitHub template and adapting package metadata, product identity, documentation, and agent rules.
 
 ## [0.1.0](https://github.com/vdigitaldesign/next-agent-workbench/releases/tag/v0.1.0) - 2026-10-29
