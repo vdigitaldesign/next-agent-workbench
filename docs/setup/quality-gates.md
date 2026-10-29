@@ -42,7 +42,7 @@ The root documentation allowlist is in the workflow. Unknown paths take the full
 
 CI uses Ubuntu 24.04, Node.js 24.16.0, and npm 12.2.1. It caches npm downloads, uses read-only repository permissions, and does not retain Git credentials for subsequent steps. It uses ordinary `pull_request` events and needs no project secrets. npm's default script policy still applies; the workflow does not approve dependency scripts.
 
-A failed command fails the job. Required status checks are a separate repository setting: select `Check` in a branch ruleset if your project needs GitHub to enforce a passing result before merge. Creating a project from this template copies the workflow file, not the upstream repository's settings. CI does not deploy or publish a package.
+A failed command fails the job. The upstream repository requires a pull request and a passing `Check` from GitHub Actions on `main`, with the branch up to date before merge. It does not require another reviewer. These are repository settings: creating a project from this template copies the workflow file, not the ruleset. Configure your own branch rules if you want GitHub to enforce the same merge requirements. CI does not deploy or publish a package.
 
 When changing the workflow, verify both the selected commands and the path decisions. Include documentation-only, checker-only, mixed changes, deletions and renames, unknown paths, and a missing base. Inspect an actual GitHub run before claiming the workflow works there. [GitHub's Node.js guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/nodejs) covers the underlying setup.
 
