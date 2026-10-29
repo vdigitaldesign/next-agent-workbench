@@ -7,7 +7,7 @@ A Next.js starter with working rules for Codex, Claude Code, and the people buil
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0F172A?logo=tailwindcss&logoColor=38BDF8)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[Why use it](#why-use-it) · [How it works](#working-with-agents) · [Project structure](#project-structure) · [Get started](#local-development) · [Skills](#recommended-skills) · [Background](#background) · [Documentation](docs/project-setup.md)
+[Why use it](#why-use-it) · [How it works](#working-with-agents) · [Project structure](#project-structure) · [Get started](#start-a-new-project) · [Skills](#recommended-skills) · [Background](#background) · [Documentation](docs/project-setup.md)
 
 ## Why use it
 
@@ -80,6 +80,23 @@ next-agent-workbench/
 
 Specifications, decisions, and task records are created when the project has something to record.
 
+## Start a new project
+
+Open [Next Agent Workbench on GitHub](https://github.com/vdigitaldesign/next-agent-workbench) and sign in.
+
+1. Choose **Use this template → Create a new repository**.
+2. Select the owner, give your project a name, and choose public or private visibility. Leave **Include all branches** off for the usual starting point.
+3. Create the repository, then clone **your new repository**. Replace the placeholders below with its owner and name:
+
+```bash
+git clone https://github.com/YOUR-ACCOUNT/YOUR-PROJECT.git
+cd YOUR-PROJECT
+```
+
+Follow [Local development](#local-development) to install and run the app, then [Make it your project](#make-it-your-project) to replace the starter's identity and context.
+
+GitHub copies the current `main` branch into an independent repository with its own initial commit. This flow does not select a release tag such as `v0.1.0`. See [GitHub's template guide](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for details.
+
 ## Local development
 
 Use npm and a supported Node.js LTS release. The [local setup guide](docs/setup/local-development.md) explains runtime requirements, dependency installation, and the scaffold's configuration.
@@ -95,10 +112,22 @@ Open the local address printed by the server and edit `app/page.tsx`. For docume
 
 ## Make it your project
 
-1. Set the application name and metadata, then update the lockfile through npm. Your application's version is independent of the starter's release version.
-2. Write down the problem, scope, and accepted decisions for your product. Choose their locations in the [source map](docs/setup/knowledge-ownership.md#project-source-map).
-3. Read `AGENTS.md` and adapt rules that depend on how you work. Verify instruction loading in your agent host and add only the skills or connectors your tasks need.
-4. Replace this README with your product's introduction. Keep the useful technical guides, set contribution and release ownership, and start your application's own changelog while retaining required license notices.
+Work through these once in the new repository:
+
+1. Set your application's `name`, `author`, and version in [package.json](package.json). Its version is independent of Workbench's releases. Keep `private: true` for an application you do not intend to publish to npm. For example:
+
+   ```bash
+   npm pkg set name="my-project" author="Your name"
+   npm install --package-lock-only --ignore-scripts
+   ```
+
+   The second command updates [package-lock.json](package-lock.json) through npm after the metadata change; do not edit the lockfile by hand.
+
+2. Update the page title, description, and HTML language in [app/layout.tsx](app/layout.tsx). Replace the starter content in [app/page.tsx](app/page.tsx), the [favicon](app/favicon.ico), and any starter assets in [public/](public/). Adapt [app/globals.css](app/globals.css) as your product's styling takes shape.
+3. Write down your problem, scope, and accepted decisions. In the [source map](docs/setup/knowledge-ownership.md#project-source-map), record where they live and who owns them. Choose repository documents, your own external workspace, or a mix that fits your project.
+4. Adapt [AGENTS.md](AGENTS.md) to how your team works. Keep [CLAUDE.md](CLAUDE.md) importing that shared policy, verify that your agent host loads it, and add only the skills or connectors your tasks need.
+5. Replace this README with your product's introduction, setup steps, and links. Update [CONTRIBUTING.md](CONTRIBUTING.md) and [the release guide](docs/releasing.md) for your maintainers and workflow, and start your application's own [CHANGELOG.md](CHANGELOG.md).
+6. Preserve the required copyright and permission notices in [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Changing the package author does not replace those notices.
 
 Private workspace links and temporary coordination can live in ignored `AGENTS.local.md`. The shared policy explicitly tells agents to read it when present. Keep requirements that collaborators need in shared documentation, or give them an authorized brief; private context should not make a public contribution impossible to understand.
 
