@@ -4,6 +4,8 @@ Release contents and adoption notes for Next Agent Workbench. Versioning follows
 
 ## Unreleased
 
+## [0.2.0](https://github.com/vdigitaldesign/next-agent-workbench/releases/tag/v0.2.0) - 2026-10-29
+
 ### Added
 
 - GitHub Actions checks for pull requests and pushes to main, with documentation, checker, and application checks selected from the changed files.
