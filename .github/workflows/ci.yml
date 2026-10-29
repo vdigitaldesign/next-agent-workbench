@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Check out the proposed result
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Choose checks
+        id: scope
+        shell: bash
+        env:
+          CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          full=false
+          checker=false
+          paths="$RUNNER_TEMP/ci-changed-paths"
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] ||
+             ! [[ "$CHANGE_BASE" =~ ^[0-9a-f]{40}$ ]] ||
+             ! git diff --no-renames --name-only -z "$CHANGE_BASE" HEAD -- > "$paths"; then
+            echo "No comparison available; running all checks."
+            full=true
+          else
+            while IFS= read -r -d '' path; do
+              case "$path" in
+                README.md|AGENTS.md|CLAUDE.md|CONTRIBUTING.md|CHANGELOG.md|THIRD_PARTY_NOTICES.md|LICENSE|docs/*.md|.github/pull_request_template.md)
+                  ;;
+                scripts/check-docs.mjs|scripts/check-docs.test.mjs)
+                  checker=true
+                  ;;
+                *)
+                  full=true
+                  ;;
+              esac
+            done < "$paths"
+          fi
+
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+          echo "checker=$checker" >> "$GITHUB_OUTPUT"
+          echo "Full checks: $full; checker changed: $checker; documentation: always."
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24.16.0"
+          cache: npm
+
+      - name: Select npm
+        run: npm install --global npm@12.2.1 --ignore-scripts
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check documentation
+        run: npm run docs:check
+
+      - name: Test the documentation checker
+        if: steps.scope.outputs.full == 'true' || steps.scope.outputs.checker == 'true'
+        run: node --test scripts/check-docs.test.mjs
+
+      - name: Lint
+        if: steps.scope.outputs.full == 'true' || steps.scope.outputs.checker == 'true'
+        run: npm run lint
+
+      - name: Build
+        if: steps.scope.outputs.full == 'true'
+        run: npm run build
