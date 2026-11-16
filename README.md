@@ -1,3 +1,5 @@
+![Next Agent Workbench — Start your next project with shared agent rules.](.github/assets/next-agent-workbench-hero.svg)
+
 # Next Agent Workbench
 
 A Next.js starter with working rules for Codex, Claude Code, and the people building with them.
